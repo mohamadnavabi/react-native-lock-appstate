@@ -1,22 +1,46 @@
-import { NativeModules, Platform } from 'react-native';
+import { useState, useEffect } from 'react';
+import { AppState, DeviceEventEmitter } from 'react-native';
 
-const LINKING_ERROR =
-  `The package 'react-native-lock-appstate' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
+let backgroundTimeout: Timeout;
 
-const LockAppstate = NativeModules.LockAppstate
-  ? NativeModules.LockAppstate
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
+export type LockAppStateStatus =
+  | 'active'
+  | 'background'
+  | 'inactive'
+  | 'unknown'
+  | 'extension'
+  | 'screenLock'
+  | 'buttonLock';
+
+const useAppState = (
+  callback?: (state: LockAppStateStatus) => void
+): LockAppStateStatus => {
+  const [appState, setAppState] = useState<LockAppStateStatus>(
+    AppState.currentState
+  );
+
+  useEffect(() => {
+    const appStateListener = AppState.addEventListener(
+      'change',
+      onAppStateChange
+    );
+    const onLockListener = DeviceEventEmitter.addListener(
+      'onLocked',
+      onAppStateChange
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return LockAppstate.multiply(a, b);
-}
+    return () => {
+      appStateListener.remove();
+      onLockListener.remove();
+    };
+  }, [appState]);
+
+  const onAppStateChange = (nextState: LockAppStateStatus) => {
+    setAppState(nextState);
+    if (callback) callback(nextState);
+  };
+
+  return appState;
+};
+
+export default useAppState;

@@ -1,18 +1,25 @@
 import * as React from 'react';
-
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-lock-appstate';
+import useAppState from 'react-native-lock-appstate';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const appState = useAppState((state) => {
+    if (state === 'active') {
+      // Action if state is actived
+    }
+    if (state === 'background') {
+      // Action if state is background
+    }
+    if (state === 'screenLock' || state === 'buttonLock') {
+      // Action if state is locked
+    }
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+    // Next states...
+  });
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Result: {appState}</Text>
     </View>
   );
 }
