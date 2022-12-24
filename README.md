@@ -1,6 +1,6 @@
 # react-native-lock-appstate
 
-Detection background and screen lock
+Screen lock detection for react native
 
 ## Installation
 
