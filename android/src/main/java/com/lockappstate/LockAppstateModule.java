@@ -42,7 +42,7 @@ public class LockAppstateModule extends ReactContextBaseJavaModule {
         String stringAction = intent.getAction();
         if (stringAction.equals(Intent.ACTION_SCREEN_OFF)) {
           reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit("onLocked", keyguardManager.inKeyguardRestrictedInputMode() ? "buttonLock": "screenLock");
+            .emit("onLocked", keyguardManager.inKeyguardRestrictedInputMode() ? "buttonLock": "sleepLock");
         }
       }
     };

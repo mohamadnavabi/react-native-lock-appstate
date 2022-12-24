@@ -4,13 +4,15 @@ import useAppState from 'react-native-lock-appstate';
 
 export default function App() {
   const appState = useAppState((state) => {
+    console.log('state', state);
+
     if (state === 'active') {
       // Action if state is actived
     }
     if (state === 'background') {
       // Action if state is background
     }
-    if (state === 'screenLock' || state === 'buttonLock') {
+    if (state === 'sleepLock' || state === 'buttonLock') {
       // Action if state is locked
     }
 

@@ -1,7 +1,18 @@
 import { useState, useEffect } from 'react';
-import { AppState, DeviceEventEmitter } from 'react-native';
+import {
+  NativeEventEmitter,
+  NativeModules,
+  Platform,
+  AppState,
+  DeviceEventEmitter,
+} from 'react-native';
 
 let backgroundTimeout: Timeout;
+
+const lockEventEmitter =
+  Platform.OS === 'ios'
+    ? new NativeEventEmitter(NativeModules.RNEventEmitter)
+    : DeviceEventEmitter;
 
 export type LockAppStateStatus =
   | 'active'
@@ -9,7 +20,7 @@ export type LockAppStateStatus =
   | 'inactive'
   | 'unknown'
   | 'extension'
-  | 'screenLock'
+  | 'sleepLock'
   | 'buttonLock';
 
 const useAppState = (
@@ -24,7 +35,7 @@ const useAppState = (
       'change',
       onAppStateChange
     );
-    const onLockListener = DeviceEventEmitter.addListener(
+    const onLockListener = lockEventEmitter.addListener(
       'onLocked',
       onAppStateChange
     );
