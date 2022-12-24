@@ -7,8 +7,6 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 
-let backgroundTimeout: Timeout;
-
 const lockEventEmitter =
   Platform.OS === 'ios'
     ? new NativeEventEmitter(NativeModules.RNEventEmitter)

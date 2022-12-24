@@ -4,8 +4,6 @@ import useAppState from 'react-native-lock-appstate';
 
 export default function App() {
   const appState = useAppState((state) => {
-    console.log('state', state);
-
     if (state === 'active') {
       // Action if state is actived
     }
